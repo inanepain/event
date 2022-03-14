@@ -1,0 +1,41 @@
+{
+    "name": "inanepain/event",
+    "description": "PSR-14 implementation: event dispatcher.",
+    "type": "library",
+    "keywords": [
+        "php",
+        "event",
+        "dispatcher",
+        "listener"
+    ],
+    "license": "UNLICENSE",
+    "homepage": "https://github.com/inanepain/event",
+    "authors": [
+        {
+            "name": "Philip Michael Raab",
+            "email": "philip@inane.co.za",
+            "homepage": "https://inane.co.za",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "philip@inane.co.za",
+        "wiki": "https://github.com/inanepain/event/wiki",
+        "issues": "https://github.com/inanepain/event/issues"
+    },
+    "minimum-stability": "dev",
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "discard-changes": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Inane\\Event\\": "./src/"
+        }
+    },
+    "require": {
+        "psr/event-dispatcher": "^1.0"
+    }
+}
