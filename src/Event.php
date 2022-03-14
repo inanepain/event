@@ -1,18 +1,42 @@
 <?php
 
+/**
+ * Inane
+ *
+ * Event
+ *
+ * PHP version 8.1
+ *
+ * @package Inane\Event
+ * @author Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license UNLICENSE
+ * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @copyright 2022 Philip Michael Raab <peep@inane.co.za>
+ */
+
+declare(strict_types=1);
+
 namespace Inane\Event;
 
 use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
  * Class Event
- * @package DevCoder\Listener
+ *
+ * @package Inane\Event
+ *
+ * @version 1.0.0
  */
 class Event implements StoppableEventInterface {
+
     /**
+     * Propagation Stopped
+     *
      * @var bool Whether no further event listeners should be triggered
      */
-    private $propagationStopped = false;
+    private bool $propagationStopped = false;
 
     /**
      * Is propagation stopped?

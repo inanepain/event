@@ -1,17 +1,42 @@
 <?php
 
+/**
+ * Inane
+ *
+ * Event
+ *
+ * PHP version 8.1
+ *
+ * @package Inane\Event
+ * @author Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license UNLICENSE
+ * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @copyright 2022 Philip Michael Raab <peep@inane.co.za>
+ */
+
+declare(strict_types=1);
 
 namespace Inane\Event;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+use function get_class;
+use function array_key_exists;
+
 /**
  * Class ListenerProvider
- * @package DevCoder\Listener
+ *
+ * @package Inane\Event
+ *
+ * @version 1.0.0
  */
 class ListenerProvider implements ListenerProviderInterface {
 
     /**
+     * Listeners
+     *
      * @var array
      */
     private array $listeners = [];
