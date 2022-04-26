@@ -3,6 +3,7 @@
     "description": "PSR-14 implementation: event dispatcher.",
     "type": "library",
     "keywords": [
+        "inane",
         "php",
         "event",
         "dispatcher",
@@ -10,6 +11,7 @@
     ],
     "license": "UNLICENSE",
     "homepage": "https://github.com/inanepain/event",
+	"readme": "README.md",
     "authors": [
         {
             "name": "Philip Michael Raab",

@@ -34,21 +34,19 @@ use Psr\EventDispatcher\{
  * @version 1.0.0
  */
 class EventDispatcher implements EventDispatcherInterface {
-
     /**
-     * Listener Provider
+     * EventDispatcher constructor
      *
-     * @var ListenerProviderInterface
+     * @param ListenerProviderInterface $provider
      */
-    private ListenerProviderInterface $listenerProvider;
-
-    /**
-     * EventDispatcher constructor.
-     *
-     * @param ListenerProviderInterface $listenerProvider
-     */
-    public function __construct(ListenerProviderInterface $listenerProvider) {
-        $this->listenerProvider = $listenerProvider;
+    public function __construct(
+        /**
+         * Listener Provider
+         *
+         * @var ListenerProviderInterface
+         */
+        private ListenerProviderInterface $provider
+    ) {
     }
 
     /**
@@ -61,7 +59,10 @@ class EventDispatcher implements EventDispatcherInterface {
     public function dispatch(object $event): object {
         if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) return $event;
 
-        foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) $listener($event);
+        foreach ($this->provider->getListenersForEvent($event) as $listener) {
+            $listener($event);
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) break;
+        }
 
         return $event;
     }
