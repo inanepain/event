@@ -1,5 +1,7 @@
 # Inane\Event
 
+> $Id$ ($Date$)
+
 Both examples are basically the same but the second extends the provider for the application.
 
 ## Example 1:

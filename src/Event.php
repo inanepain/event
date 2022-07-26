@@ -13,7 +13,8 @@
  * @license UNLICENSE
  * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
  *
- * @copyright 2022 Philip Michael Raab <peep@inane.co.za>
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);

@@ -13,7 +13,8 @@
  * @license UNLICENSE
  * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
  *
- * @copyright 2022 Philip Michael Raab <peep@inane.co.za>
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
@@ -22,8 +23,8 @@ namespace Inane\Event;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
-use function get_class;
 use function array_key_exists;
+use function get_class;
 
 /**
  * Class ListenerProvider
