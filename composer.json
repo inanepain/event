@@ -3,13 +3,15 @@
     "description": "PSR-14 implementation: event dispatcher.",
     "type": "library",
     "keywords": [
+        "inane",
         "php",
         "event",
         "dispatcher",
         "listener"
     ],
     "license": "UNLICENSE",
-    "homepage": "https://github.com/inanepain/event",
+    "homepage": "http://vaieen.local:8000/inane/event",
+	"readme": "README.md",
     "authors": [
         {
             "name": "Philip Michael Raab",
