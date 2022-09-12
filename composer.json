@@ -2,42 +2,41 @@
     "name": "inanepain/event",
     "description": "PSR-14 implementation: event dispatcher.",
     "type": "library",
-    "keywords": [
-        "inane",
-        "php",
-        "event",
-        "dispatcher",
-        "listener"
-    ],
     "license": "UNLICENSE",
-    "homepage": "http://vaieen.local:8000/inane/event",
-	"readme": "README.md",
+    "homepage": "http://vaieen.local:3000/inane/event",
+    "readme": "README.md",
     "authors": [
         {
             "name": "Philip Michael Raab",
-            "email": "philip@inane.co.za",
-            "homepage": "https://inane.co.za",
+            "email": "peep@inane.co.za",
             "role": "Developer"
         }
     ],
     "support": {
-        "email": "philip@inane.co.za",
-        "wiki": "https://github.com/inanepain/event/wiki",
-        "issues": "https://github.com/inanepain/event/issues"
+        "email": "peep@inane.co.za",
+        "issues": "http://vaieen.local:3000/iane"
     },
-    "minimum-stability": "dev",
+    "keywords": [
+        "inane",
+        "event",
+        "dispatcher",
+        "listener"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Inane\\Event\\": "src/"
+        }
+    },
     "config": {
         "preferred-install": "dist",
         "optimize-autoloader": true,
         "discard-changes": true,
         "sort-packages": true
     },
-    "autoload": {
-        "psr-4": {
-            "Inane\\Event\\": "./src/"
-        }
-    },
+    "minimum-stability": "dev",
     "require": {
+        "php": ">=8.1",
         "psr/event-dispatcher": "^1.0"
-    }
+    },
+    "require-dev": {}
 }
