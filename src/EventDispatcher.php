@@ -46,7 +46,7 @@ class EventDispatcher implements EventDispatcherInterface {
          *
          * @var ListenerProviderInterface
          */
-        private ListenerProviderInterface $provider
+        protected ListenerProviderInterface $provider
     ) {
     }
 
