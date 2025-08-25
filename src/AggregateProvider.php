@@ -1,20 +1,23 @@
 <?php
 
 /**
- * Inane
+ * Inane: Event
  *
- * Event
+ * PSR-14 implementation: event dispatcher.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
  *
- * @package Inane\Event
- * @author Philip Michael Raab<peep@inane.co.za>
+ * PHP version 8.4
+ *
+ * @author Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\event
+ * @category event
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -31,8 +34,6 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  * Be aware that any ordering of listeners in different sub-providers is ignored, and providers are
  * iterated in the order in which they were added.  That is, all listeners from the first provider
  * added will be returned to the caller, then all listeners from the second provider, and so on.
- *
- * @package Inane\Event
  *
  * @version 1.0.0
  */

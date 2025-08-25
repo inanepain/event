@@ -1,20 +1,23 @@
 <?php
 
 /**
- * Inane
+ * Inane: Event
  *
- * Event
+ * PSR-14 implementation: event dispatcher.
  *
- * PHP version 8.1
+ * $Id$
+ * $Date$
  *
- * @package Inane\Event
- * @author Philip Michael Raab<peep@inane.co.za>
+ * PHP version 8.4
+ *
+ * @author Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\event
+ * @category event
  *
  * @license UNLICENSE
- * @license https://github.com/inanepain/event/raw/develop/UNLICENSE UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -23,8 +26,6 @@ namespace Inane\Event;
 
 /**
  * Class Event
- *
- * @package Inane\Event
  *
  * @version 1.0.0
  */
