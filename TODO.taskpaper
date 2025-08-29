@@ -1,2 +1,2 @@
-Inane\Event:
-    prs-14 event dispatcher
+inanepain/event:
+  PSR-14 implementation: event dispatcher.
