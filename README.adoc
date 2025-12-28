@@ -1,12 +1,17 @@
-# Inane\Event
+= Inane\Event
 
-> $Id$ ($Date$)
+____
+
+$Id$ ($Date$)
+
+____
 
 Both examples are basically the same but the second extends the provider for the application.
 
-## Example 1:
+== Example 1:
 
-```php
+[source,php]
+----
 class Odd extends \Inane\Event\StoppableEvent {
     public function __construct(
         protected string $message = ''
@@ -43,11 +48,12 @@ $provider->addListener(Odd::class, function ($event) {
 
 $startEvent = new \Inane\Event\Event();
 $dispatcher->dispatch($startEvent);
-```
+----
 
-## Example 2:
+== Example 2:
 
-```php
+[source,php]
+----
 class Odd extends \Inane\Event\StoppableEvent {
     public function __construct(
         protected string $message = ''
@@ -87,4 +93,4 @@ $num->addListener(Odd::class, function ($event) {
 });
 
 $num->start();
-```
+----
