@@ -1,48 +1,3 @@
-= inanepain/event image:./icon.png[title=inanepain/event,25]
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: PSR-14 implementation: event dispatcher.
-:keywords: inanepain, library, event, dispatcher, listener
-:homepage: https://github.com/inanepain/event
-:revnumber: 0.1.0
-:revdate: 2022-03-14
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:toc: left
-:sectanchors:
-:idprefix: topic-
-:idseparator: -
-:pkg-vendor: inanepain
-:pkg-name: event
-:pkg-id: {pkg-vendor}/{pkg-name}
-
-== image:./icon.png[title={pkg-id},25] {pkg-id}
-
-{description}
-
-:sectnums:
-
-<<<
-
-:leveloffset: +1
-
-= Install
-
-.composer
-[source,shell]
-====
-composer require {pkg-id}
-====
-
-:leveloffset!:
-
-<<<
-
-:leveloffset: +1
-
 = Usage
 
 Both examples are basically the same but the second extends the provider for the application.
@@ -133,5 +88,3 @@ $num->addListener(Odd::class, function ($event) {
 
 $num->start();
 ----
-
-:leveloffset!:
