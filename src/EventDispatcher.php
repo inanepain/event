@@ -27,8 +27,7 @@ namespace Inane\Event;
 use Psr\EventDispatcher\{
     EventDispatcherInterface,
     ListenerProviderInterface,
-    StoppableEventInterface
-};
+    StoppableEventInterface};
 
 /**
  * EventDispatcher
@@ -59,11 +58,9 @@ class EventDispatcher implements EventDispatcherInterface {
      * @return object
      */
     public function dispatch(object $event): object {
-        if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) return $event;
-
         foreach ($this->provider->getListenersForEvent($event) as $listener) {
+            if ($event instanceof StoppableEventInterface && $event->propagationStopped) return $event;
             $listener($event);
-            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) break;
         }
 
         return $event;
