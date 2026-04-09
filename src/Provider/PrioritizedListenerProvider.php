@@ -2,38 +2,30 @@
 
 /**
  * Inane: Event
- *
  * PSR-14 implementation: event dispatcher.
- *
  * $Id$
  * $Date$
- *
  * PHP version 8.4
  *
- * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\event
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\event
  * @category event
- *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
- *
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
-namespace Inane\Event;
+namespace Inane\Event\Provider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
-
 use function is_object;
 use function krsort;
-
 use const SORT_NUMERIC;
 
 /**
  * PrioritizedListenerProvider
- *
  * A listener provider that returns listeners ordered by priority (highest first).
  * Listeners with the same priority are returned in the order they were added.
  *
@@ -60,7 +52,6 @@ class PrioritizedListenerProvider implements ListenerProviderInterface {
 
     /**
      * Add a listener for an event with an optional priority.
-     *
      * Higher priority values are called first. Default priority is 0.
      *
      * @param string|object $event    The event class name or instance.
@@ -72,12 +63,12 @@ class PrioritizedListenerProvider implements ListenerProviderInterface {
     public function addListener(string|object $event, callable $listener, int $priority = 0): static {
         $name = static::getEventName($event);
         $this->listeners[$name][$priority][] = $listener;
+
         return $this;
     }
 
     /**
      * Get Listeners For Event
-     *
      * Returns listeners ordered by priority (highest first).
      *
      * @param object $event
@@ -92,7 +83,7 @@ class PrioritizedListenerProvider implements ListenerProviderInterface {
         $priorityGroups = $this->listeners[$name];
         krsort($priorityGroups, SORT_NUMERIC);
 
-        foreach ($priorityGroups as $listeners) {
+        foreach($priorityGroups as $listeners) {
             yield from $listeners;
         }
     }

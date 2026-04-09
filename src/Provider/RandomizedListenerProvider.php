@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Inane\Event;
+namespace Inane\Event\Provider;
 
 use function shuffle;
 

@@ -62,7 +62,7 @@ class Odd extends \Inane\Event\StoppableEvent {
     }
 }
 
-$provider = new \Inane\Event\ListenerProvider();
+$provider = new \Inane\Event\Provider\ListenerProvider();
 $dispatcher = new \Inane\Event\EventDispatcher($provider);
 
 $provider->addListener(\Inane\Event\Event::class, fn ($event) => print_r($event));
@@ -104,7 +104,7 @@ class Odd extends \Inane\Event\StoppableEvent {
     }
 }
 
-class Numbers extends \Inane\Event\ListenerProvider {
+class Numbers extends \Inane\Event\Provider\ListenerProvider {
     private \Inane\Event\EventDispatcher $dispatcher;
 
     public function __construct() {
