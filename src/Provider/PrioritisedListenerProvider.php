@@ -25,13 +25,13 @@ use function krsort;
 use const SORT_NUMERIC;
 
 /**
- * PrioritizedListenerProvider
+ * PrioritisedListenerProvider
  * A listener provider that returns listeners ordered by priority (highest first).
  * Listeners with the same priority are returned in the order they were added.
  *
  * @version 1.0.0
  */
-class PrioritizedListenerProvider implements ListenerProviderInterface {
+class PrioritisedListenerProvider implements ListenerProviderInterface {
     /**
      * Listeners indexed by event name and priority
      *

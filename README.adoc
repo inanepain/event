@@ -12,12 +12,15 @@
 :icons: font
 :source-highlighter: highlight.js
 :toc: left
+:toclevels: 3
 :sectanchors:
 :idprefix: topic-
 :idseparator: -
 :pkg-vendor: inanepain
 :pkg-name: event
 :pkg-id: {pkg-vendor}/{pkg-name}
+:ns-root: Inane\Event
+:ns-provider: Inane\Event\Provider
 
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 
@@ -45,93 +48,494 @@ composer require {pkg-id}
 
 = Usage
 
-Both examples are basically the same but the second extends the provider for the application.
+:leveloffset: +1
 
-== Example 1:
+= Events
 
-[source,php]
-----
-class Odd extends \Inane\Event\StoppableEvent {
-    public function __construct(
-        protected string $message = ''
-    ) {
-    }
+:leveloffset: +1
 
-    public function getMessage(): string {
-        return $this->message;
-    }
-}
+= Event
 
-$provider = new \Inane\Event\Provider\ListenerProvider();
-$dispatcher = new \Inane\Event\EventDispatcher($provider);
+`{ns-root}\Event`
 
-$provider->addListener(\Inane\Event\Event::class, fn ($event) => print_r($event));
-$provider->addListener(\Inane\Event\Event::class, function($event) use ($dispatcher) {
-    echo "START:\n";
+Base event class. Extend this to create custom events.
 
-    foreach([0,1,2,3,4,5,6,7,8,9] as $i) {
-        echo "Current: {$i}\n";
-        if($i & 1) $dispatcher->dispatch(new Odd("{$i}"));
-        echo "\n";
-    }
-});
+== Properties
 
-$provider->addListener(Odd::class, function ($event) {
-    if ($event->getMessage() > 5) $event->stopPropagation();
-    echo "Odd: " . $event->getMessage() . "\n";
-});
+`name` : `string`::
+The event name. Defaults to the fully-qualified class name of the event if not explicitly set.
 
-$provider->addListener(Odd::class, function ($event) {
-    echo "Not Even: " . $event->getMessage() . "\n";
-});
-
-$startEvent = new \Inane\Event\Event();
-$dispatcher->dispatch($startEvent);
-----
-
-== Example 2:
+== Usage
 
 [source,php]
 ----
-class Odd extends \Inane\Event\StoppableEvent {
+use Inane\Event\Event;
+
+// Use directly
+$event = new Event();
+echo $event->name; // "Inane\Event\Event"
+
+// Extend to create a named domain event
+class UserRegistered extends Event {
     public function __construct(
-        protected string $message = ''
-    ) {
-    }
-
-    public function getMessage(): string {
-        return $this->message;
-    }
+        public readonly string $username
+    ) {}
 }
 
-class Numbers extends \Inane\Event\Provider\ListenerProvider {
-    private \Inane\Event\EventDispatcher $dispatcher;
-
-    public function __construct() {
-        $this->dispatcher = new \Inane\Event\EventDispatcher($this);
-    }
-
-    public function start() {
-        foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as $i) {
-            echo "Current: {$i}\n";
-            if ($i & 1) $this->dispatcher->dispatch(new Odd("{$i}"));
-            echo "\n";
-        }
-    }
-}
-
-$num = new Numbers();
-
-$num->addListener(Odd::class, function ($event) {
-    if ($event->getMessage() > 5) $event->stopPropagation();
-    echo "Odd: " . $event->getMessage() . "\n";
-});
-
-$num->addListener(Odd::class, function ($event) {
-    echo "Not Even: " . $event->getMessage() . "\n";
-});
-
-$num->start();
+$event = new UserRegistered('alice');
+echo $event->name;     // "UserRegistered"
+echo $event->username; // "alice"
 ----
+
+:leveloffset: 2
+
+<<<
+
+:leveloffset: +1
+
+= StoppableEvent
+
+`{ns-root}\StoppableEvent`
+
+Extends `Event` and implements `StoppableEventInterface`. Allows event propagation to be halted mid-dispatch; once stopped, propagation cannot be resumed.
+
+== Properties
+
+`propagationStopped` : `bool`::
+Whether propagation has been stopped. Once set to `true` it cannot be reset to `false`.
+
+== Methods
+
+`isPropagationStopped()` : `bool`::
+Returns `true` if propagation has been stopped.
+
+`stopPropagation()` : `void`::
+Stops propagation of the event to further listeners.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\StoppableEvent;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+class Odd extends StoppableEvent {
+    public function __construct(
+        public readonly string $message = ''
+    ) {}
+}
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Odd::class, function (Odd $event) {
+    echo "Listener 1: " . $event->message . "\n";
+    if ($event->message > 5) $event->stopPropagation();
+});
+
+$provider->addListener(Odd::class, function (Odd $event) {
+    echo "Listener 2: " . $event->message . "\n";
+});
+
+$dispatcher->dispatch(new Odd('3')); // both listeners fire
+$dispatcher->dispatch(new Odd('7')); // only listener 1 fires
+----
+
+:leveloffset: 2
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Dispatcher
+
+:leveloffset: +1
+
+= EventDispatcher
+
+`{ns-root}\EventDispatcher`
+
+Implements `EventDispatcherInterface`. Dispatches events to all registered listeners via a `ListenerProviderInterface`. Respects `StoppableEventInterface` — propagation halts as soon as `isPropagationStopped()` returns `true`.
+
+== Constructor
+
+`__construct(ListenerProviderInterface $provider)`::
+Accepts any listener provider implementing `ListenerProviderInterface`.
+
+== Methods
+
+`dispatch(object $event)` : `object`::
+Dispatches the event to all applicable listeners and returns the (possibly modified) event.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, function (Event $event) {
+    echo "Received: " . $event->name . "\n";
+});
+
+$dispatcher->dispatch(new Event());
+----
+
+:leveloffset: 2
+
+<<<
+
+:leveloffset: +1
+
+= Listener Providers
+
+:leveloffset: +1
+
+= Default Provider
+
+`{ns-provider}\ListenerProvider`
+
+Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
+
+== Methods
+
+`addListener(string|object $event, callable $listener)` : `static`::
+Registers a listener for the given event class name or instance. Returns the provider for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners registered for the event's class, in insertion order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("First\n"))
+         ->addListener(Event::class, fn (Event $e) => print("Second\n"));
+
+$dispatcher->dispatch(new Event());
+// First
+// Second
+----
+
+:leveloffset: 3
+
+<<<
+
+:leveloffset: +1
+
+= Prioritised Provider
+
+`{ns-provider}\PrioritisedListenerProvider`
+
+Listener provider that dispatches listeners in priority order. Higher priority values are called first; listeners with equal priority are called in insertion order.
+
+== Methods
+
+`addListener(string|object $event, callable $listener, int $priority = 0)` : `static`::
+Registers a listener with an optional priority (default `0`). Returns the provider for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns listeners ordered by descending priority.
+
+`clearListeners(string|object $event)` : `void`::
+Removes all listeners registered for the given event.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\PrioritisedListenerProvider;
+
+$provider = new PrioritisedListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("Low\n"),    priority: -10)
+         ->addListener(Event::class, fn (Event $e) => print("Default\n"))
+         ->addListener(Event::class, fn (Event $e) => print("High\n"),   priority: 10);
+
+$dispatcher->dispatch(new Event());
+// High
+// Default
+// Low
+----
+
+:leveloffset: 3
+
+<<<
+
+:leveloffset: +1
+
+= Randomized Provider
+
+`{ns-provider}\RandomizedListenerProvider`
+
+Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
+
+== Methods
+
+Inherits `addListener()` from `ListenerProvider`.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners for the event in a randomised order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\RandomizedListenerProvider;
+
+$provider = new RandomizedListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("A\n"))
+         ->addListener(Event::class, fn (Event $e) => print("B\n"))
+         ->addListener(Event::class, fn (Event $e) => print("C\n"));
+
+// Order of A, B, C is random on each dispatch
+$dispatcher->dispatch(new Event());
+----
+
+:leveloffset: 3
+
+<<<
+
+:leveloffset: +1
+
+= Aggregate Provider
+
+`{ns-provider}\AggregateProvider`
+
+Combines multiple listener providers into one. Each sub-provider is queried in the order it was added; all listeners from the first provider are returned before any from the second, and so on. Per-provider internal ordering is preserved, but cross-provider ordering is not guaranteed.
+
+== Methods
+
+`addProvider(ListenerProviderInterface $provider)` : `static`::
+Appends a provider to the aggregate. Returns the aggregate for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Yields listeners from each sub-provider in registration order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\AggregateProvider;
+use Inane\Event\Provider\ListenerProvider;
+use Inane\Event\Provider\PrioritisedListenerProvider;
+
+$basic      = new ListenerProvider();
+$prioritized = new PrioritisedListenerProvider();
+
+$basic->addListener(Event::class, fn (Event $e) => print("Basic listener\n"));
+$prioritized->addListener(Event::class, fn (Event $e) => print("Priority listener\n"), priority: 5);
+
+$aggregate = new AggregateProvider();
+$aggregate->addProvider($basic)
+          ->addProvider($prioritized);
+
+$dispatcher = new EventDispatcher($aggregate);
+$dispatcher->dispatch(new Event());
+// Basic listener
+// Priority listener
+----
+
+:leveloffset: 3
+
+:leveloffset: 2
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Listener Providers
+
+:leveloffset: +1
+
+= Default Provider
+
+`{ns-provider}\ListenerProvider`
+
+Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
+
+== Methods
+
+`addListener(string|object $event, callable $listener)` : `static`::
+Registers a listener for the given event class name or instance. Returns the provider for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners registered for the event's class, in insertion order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("First\n"))
+         ->addListener(Event::class, fn (Event $e) => print("Second\n"));
+
+$dispatcher->dispatch(new Event());
+// First
+// Second
+----
+
+:leveloffset: 2
+
+<<<
+
+:leveloffset: +1
+
+= Prioritised Provider
+
+`{ns-provider}\PrioritisedListenerProvider`
+
+Listener provider that dispatches listeners in priority order. Higher priority values are called first; listeners with equal priority are called in insertion order.
+
+== Methods
+
+`addListener(string|object $event, callable $listener, int $priority = 0)` : `static`::
+Registers a listener with an optional priority (default `0`). Returns the provider for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns listeners ordered by descending priority.
+
+`clearListeners(string|object $event)` : `void`::
+Removes all listeners registered for the given event.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\PrioritisedListenerProvider;
+
+$provider = new PrioritisedListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("Low\n"),    priority: -10)
+         ->addListener(Event::class, fn (Event $e) => print("Default\n"))
+         ->addListener(Event::class, fn (Event $e) => print("High\n"),   priority: 10);
+
+$dispatcher->dispatch(new Event());
+// High
+// Default
+// Low
+----
+
+:leveloffset: 2
+
+<<<
+
+:leveloffset: +1
+
+= Randomized Provider
+
+`{ns-provider}\RandomizedListenerProvider`
+
+Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
+
+== Methods
+
+Inherits `addListener()` from `ListenerProvider`.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners for the event in a randomised order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\RandomizedListenerProvider;
+
+$provider = new RandomizedListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("A\n"))
+         ->addListener(Event::class, fn (Event $e) => print("B\n"))
+         ->addListener(Event::class, fn (Event $e) => print("C\n"));
+
+// Order of A, B, C is random on each dispatch
+$dispatcher->dispatch(new Event());
+----
+
+:leveloffset: 2
+
+<<<
+
+:leveloffset: +1
+
+= Aggregate Provider
+
+`{ns-provider}\AggregateProvider`
+
+Combines multiple listener providers into one. Each sub-provider is queried in the order it was added; all listeners from the first provider are returned before any from the second, and so on. Per-provider internal ordering is preserved, but cross-provider ordering is not guaranteed.
+
+== Methods
+
+`addProvider(ListenerProviderInterface $provider)` : `static`::
+Appends a provider to the aggregate. Returns the aggregate for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Yields listeners from each sub-provider in registration order.
+
+== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\AggregateProvider;
+use Inane\Event\Provider\ListenerProvider;
+use Inane\Event\Provider\PrioritisedListenerProvider;
+
+$basic      = new ListenerProvider();
+$prioritized = new PrioritisedListenerProvider();
+
+$basic->addListener(Event::class, fn (Event $e) => print("Basic listener\n"));
+$prioritized->addListener(Event::class, fn (Event $e) => print("Priority listener\n"), priority: 5);
+
+$aggregate = new AggregateProvider();
+$aggregate->addProvider($basic)
+          ->addProvider($prioritized);
+
+$dispatcher = new EventDispatcher($aggregate);
+$dispatcher->dispatch(new Event());
+// Basic listener
+// Priority listener
+----
+
+:leveloffset: 2
+
+:leveloffset: 1
 
 :leveloffset!:

@@ -4,7 +4,7 @@
 
 Combines multiple listener providers into one. Each sub-provider is queried in the order it was added; all listeners from the first provider are returned before any from the second, and so on. Per-provider internal ordering is preserved, but cross-provider ordering is not guaranteed.
 
-=== Methods
+== Methods
 
 `addProvider(ListenerProviderInterface $provider)` : `static`::
 Appends a provider to the aggregate. Returns the aggregate for chaining.
@@ -12,7 +12,7 @@ Appends a provider to the aggregate. Returns the aggregate for chaining.
 `getListenersForEvent(object $event)` : `iterable`::
 Yields listeners from each sub-provider in registration order.
 
-=== Usage
+== Usage
 
 [source,php]
 ----
@@ -20,10 +20,10 @@ use Inane\Event\Event;
 use Inane\Event\EventDispatcher;
 use Inane\Event\Provider\AggregateProvider;
 use Inane\Event\Provider\ListenerProvider;
-use Inane\Event\Provider\PrioritizedListenerProvider;
+use Inane\Event\Provider\PrioritisedListenerProvider;
 
 $basic      = new ListenerProvider();
-$prioritized = new PrioritizedListenerProvider();
+$prioritized = new PrioritisedListenerProvider();
 
 $basic->addListener(Event::class, fn (Event $e) => print("Basic listener\n"));
 $prioritized->addListener(Event::class, fn (Event $e) => print("Priority listener\n"), priority: 5);

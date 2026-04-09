@@ -4,17 +4,17 @@
 
 Implements `EventDispatcherInterface`. Dispatches events to all registered listeners via a `ListenerProviderInterface`. Respects `StoppableEventInterface` — propagation halts as soon as `isPropagationStopped()` returns `true`.
 
-=== Constructor
+== Constructor
 
 `__construct(ListenerProviderInterface $provider)`::
 Accepts any listener provider implementing `ListenerProviderInterface`.
 
-=== Methods
+== Methods
 
 `dispatch(object $event)` : `object`::
 Dispatches the event to all applicable listeners and returns the (possibly modified) event.
 
-=== Usage
+== Usage
 
 [source,php]
 ----

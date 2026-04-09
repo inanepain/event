@@ -1,0 +1,13 @@
+= 0.2.0-dev (2026 Apr 09)
+:revnumber: 0.2.0-dev
+:revdate: 2026-04-09
+:revremark: -dev
+:version-label: Unconfirmed
+
+* refactor: moved `ListenerProvider`, `AggregateProvider`, `PrioritizedListenerProvider`, `RandomizedListenerProvider` and `ListenerProviderTrait` into `Provider` namespace.
+* new: `PrioritizedListenerProvider` - listener provider with priority ordering.
+* new: `RandomizedListenerProvider` - listener provider with randomized listener order.
+* new: `ListenerProviderTrait` - shared trait for listener provider implementations.
+* update: `Event` - added name property.
+* fix: `StoppableEvent` - corrected propagation stopping behaviour.
+* docs: restructured readme includes; events, dispatcher and providers each in their own titled section.

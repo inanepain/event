@@ -4,7 +4,7 @@ include::class/listener-provider.adoc[leveloffset=+1]
 
 <<<
 
-include::class/prioritized-listener-provider.adoc[leveloffset=+1]
+include::class/prioritised-listener-provider.adoc[leveloffset=+1]
 
 <<<
 

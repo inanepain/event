@@ -4,12 +4,12 @@
 
 Base event class. Extend this to create custom events.
 
-=== Properties
+== Properties
 
 `name` : `string`::
 The event name. Defaults to the fully-qualified class name of the event if not explicitly set.
 
-=== Usage
+== Usage
 
 [source,php]
 ----

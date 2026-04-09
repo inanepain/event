@@ -4,14 +4,14 @@
 
 Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
 
-=== Methods
+== Methods
 
 Inherits `addListener()` from `ListenerProvider`.
 
 `getListenersForEvent(object $event)` : `iterable`::
 Returns all listeners for the event in a randomised order.
 
-=== Usage
+== Usage
 
 [source,php]
 ----

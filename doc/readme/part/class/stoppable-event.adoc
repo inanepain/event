@@ -4,12 +4,12 @@
 
 Extends `Event` and implements `StoppableEventInterface`. Allows event propagation to be halted mid-dispatch; once stopped, propagation cannot be resumed.
 
-=== Properties
+== Properties
 
 `propagationStopped` : `bool`::
 Whether propagation has been stopped. Once set to `true` it cannot be reset to `false`.
 
-=== Methods
+== Methods
 
 `isPropagationStopped()` : `bool`::
 Returns `true` if propagation has been stopped.
@@ -17,7 +17,7 @@ Returns `true` if propagation has been stopped.
 `stopPropagation()` : `void`::
 Stops propagation of the event to further listeners.
 
-=== Usage
+== Usage
 
 [source,php]
 ----

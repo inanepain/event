@@ -4,7 +4,7 @@
 
 Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
 
-=== Methods
+== Methods
 
 `addListener(string|object $event, callable $listener)` : `static`::
 Registers a listener for the given event class name or instance. Returns the provider for chaining.
@@ -12,7 +12,7 @@ Registers a listener for the given event class name or instance. Returns the pro
 `getListenersForEvent(object $event)` : `iterable`::
 Returns all listeners registered for the event's class, in insertion order.
 
-=== Usage
+== Usage
 
 [source,php]
 ----
