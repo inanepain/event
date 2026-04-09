@@ -18,6 +18,8 @@
 :pkg-vendor: inanepain
 :pkg-name: event
 :pkg-id: {pkg-vendor}/{pkg-name}
+:ns-root: Inane\Event
+:ns-provider: Inane\Event\Provider
 
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 

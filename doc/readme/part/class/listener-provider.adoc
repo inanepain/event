@@ -1,0 +1,32 @@
+= ListenerProvider
+
+`{ns-provider}\ListenerProvider`
+
+Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
+
+=== Methods
+
+`addListener(string|object $event, callable $listener)` : `static`::
+Registers a listener for the given event class name or instance. Returns the provider for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners registered for the event's class, in insertion order.
+
+=== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, fn (Event $e) => print("First\n"))
+         ->addListener(Event::class, fn (Event $e) => print("Second\n"));
+
+$dispatcher->dispatch(new Event());
+// First
+// Second
+----

@@ -1,0 +1,48 @@
+= StoppableEvent
+
+`{ns-root}\StoppableEvent`
+
+Extends `Event` and implements `StoppableEventInterface`. Allows event propagation to be halted mid-dispatch; once stopped, propagation cannot be resumed.
+
+=== Properties
+
+`propagationStopped` : `bool`::
+Whether propagation has been stopped. Once set to `true` it cannot be reset to `false`.
+
+=== Methods
+
+`isPropagationStopped()` : `bool`::
+Returns `true` if propagation has been stopped.
+
+`stopPropagation()` : `void`::
+Stops propagation of the event to further listeners.
+
+=== Usage
+
+[source,php]
+----
+use Inane\Event\StoppableEvent;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+class Odd extends StoppableEvent {
+    public function __construct(
+        public readonly string $message = ''
+    ) {}
+}
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Odd::class, function (Odd $event) {
+    echo "Listener 1: " . $event->message . "\n";
+    if ($event->message > 5) $event->stopPropagation();
+});
+
+$provider->addListener(Odd::class, function (Odd $event) {
+    echo "Listener 2: " . $event->message . "\n";
+});
+
+$dispatcher->dispatch(new Odd('3')); // both listeners fire
+$dispatcher->dispatch(new Odd('7')); // only listener 1 fires
+----

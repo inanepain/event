@@ -1,0 +1,33 @@
+= EventDispatcher
+
+`{ns-root}\EventDispatcher`
+
+Implements `EventDispatcherInterface`. Dispatches events to all registered listeners via a `ListenerProviderInterface`. Respects `StoppableEventInterface` — propagation halts as soon as `isPropagationStopped()` returns `true`.
+
+=== Constructor
+
+`__construct(ListenerProviderInterface $provider)`::
+Accepts any listener provider implementing `ListenerProviderInterface`.
+
+=== Methods
+
+`dispatch(object $event)` : `object`::
+Dispatches the event to all applicable listeners and returns the (possibly modified) event.
+
+=== Usage
+
+[source,php]
+----
+use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+$provider = new ListenerProvider();
+$dispatcher = new EventDispatcher($provider);
+
+$provider->addListener(Event::class, function (Event $event) {
+    echo "Received: " . $event->name . "\n";
+});
+
+$dispatcher->dispatch(new Event());
+----
