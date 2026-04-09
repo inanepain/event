@@ -1,0 +1,7 @@
+= Dispatcher
+
+include::class/event-dispatcher.adoc[leveloffset=+1]
+
+<<<
+
+include::listener-providers.adoc[leveloffset=+1]

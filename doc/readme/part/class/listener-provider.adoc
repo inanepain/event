@@ -1,4 +1,4 @@
-= ListenerProvider
+= Default Provider
 
 `{ns-provider}\ListenerProvider`
 

@@ -12,6 +12,7 @@
 :icons: font
 :source-highlighter: highlight.js
 :toc: left
+:toclevels: 3
 :sectanchors:
 :idprefix: topic-
 :idseparator: -

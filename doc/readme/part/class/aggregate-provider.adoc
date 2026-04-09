@@ -1,4 +1,4 @@
-= AggregateProvider
+= Aggregate Provider
 
 `{ns-provider}\AggregateProvider`
 

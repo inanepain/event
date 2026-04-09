@@ -1,27 +1,11 @@
 = Usage
 
-include::class/event.adoc[leveloffset=+1]
+include::events.adoc[leveloffset=+1]
 
 <<<
 
-include::class/stoppable-event.adoc[leveloffset=+1]
+include::dispatchers.adoc[leveloffset=+1]
 
 <<<
 
-include::class/event-dispatcher.adoc[leveloffset=+1]
-
-<<<
-
-include::class/listener-provider.adoc[leveloffset=+1]
-
-<<<
-
-include::class/prioritized-listener-provider.adoc[leveloffset=+1]
-
-<<<
-
-include::class/randomized-listener-provider.adoc[leveloffset=+1]
-
-<<<
-
-include::class/aggregate-provider.adoc[leveloffset=+1]
+include::listener-providers.adoc[leveloffset=+1]
