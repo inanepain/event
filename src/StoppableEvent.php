@@ -39,9 +39,17 @@ class StoppableEvent extends Event implements StoppableEventInterface {
      * @var bool Whether no further event listeners should be triggered
      */
     public bool $propagationStopped = false {
-        get {
-            return $this->propagationStopped;
-        }
+        get => $this->propagationStopped;
+        set => $this->propagationStopped = $this->propagationStopped ? true : $value;
+    }
+
+    /**
+     * Is Propagation Stopped
+     *
+     * @return bool Whether no further event listeners should be triggered
+     */
+    public function isPropagationStopped(): bool {
+        return $this->propagationStopped;
     }
 
     /**
