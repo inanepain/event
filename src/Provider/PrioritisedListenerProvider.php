@@ -5,7 +5,7 @@
  * PSR-14 implementation: event dispatcher.
  * $Id$
  * $Date$
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author   Philip Michael Raab<philip@cathedral.co.za>
  * @package  inanepain\event
@@ -20,8 +20,10 @@ declare(strict_types = 1);
 namespace Inane\Event\Provider;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
+
 use function is_object;
 use function krsort;
+
 use const SORT_NUMERIC;
 
 /**
