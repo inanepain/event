@@ -43,6 +43,7 @@ class ListenerProvider implements ListenerProviderInterface {
      * @return void
      */
     protected function addAttributedListenerBinding(string $event, callable $listener, int $priority): void {
+        // This provider deliberately uses registration order rather than priority.
         $this->addListener($event, $listener);
     }
 }

@@ -58,6 +58,18 @@ final class LimitedEventTest extends TestCase {
     }
 
     /**
+     * A zero limit stops propagation before any listener is invoked.
+     *
+     * @return void
+     */
+    public function testZeroLimitStopsOnFirstCheck(): void {
+        $event = new LimitedEvent(0);
+
+        $this->assertTrue($event->isPropagationStopped());
+        $this->assertSame(1, $event->count);
+    }
+
+    /**
      * Each propagation check increments the counter.
      *
      * @return void

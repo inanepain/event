@@ -40,6 +40,7 @@ class Event {
      * @var string
      */
     public string $name {
+        // Resolve the default only when the event name is first requested.
         get => $this->name ??= static::class;
     }
 }

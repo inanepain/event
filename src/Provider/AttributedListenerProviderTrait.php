@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * Inane: Event
+ *
+ * PSR-14 implementation: event dispatcher.
+ *
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.5
+ *
+ * @author Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\event
+ * @category event
+ *
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
+ */
+
 declare(strict_types=1);
 
 namespace Inane\Event\Provider;
@@ -10,7 +30,13 @@ use ReflectionClass;
 
 use function class_exists;
 use function is_callable;
+use function sprintf;
 
+/**
+ * Trait AttributedListenerProviderTrait
+ * Provides functionality to register attributed listeners, enabling discovery
+ * and binding of methods within listener objects annotated with specific attributes.
+ */
 trait AttributedListenerProviderTrait {
     /**
      * Add Attributed Listener Binding
@@ -59,6 +85,7 @@ trait AttributedListenerProviderTrait {
             }
 
             foreach ($attributes as $attribute) {
+                // Each repeatable attribute creates an independent event binding.
                 $declaration = $attribute->newInstance();
                 if (!class_exists($declaration->event)) {
                     throw new InvalidArgumentException(sprintf(
