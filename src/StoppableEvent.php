@@ -27,7 +27,10 @@ namespace Inane\Event;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
- * Class Event
+ * StoppableEvent
+ *
+ * An event that a listener may stop, preventing the remaining listeners from
+ * being called.
  *
  * @version 1.0.0
  */
@@ -57,6 +60,8 @@ class StoppableEvent extends Event implements StoppableEventInterface {
      * If multiple event listeners are connected to the same event, no
      * further event listener will be triggered once any trigger calls
      * stopPropagation().
+     *
+     * @return void
      */
     public function stopPropagation(): void {
         $this->propagationStopped = true;

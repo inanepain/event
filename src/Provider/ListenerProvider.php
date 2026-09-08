@@ -22,7 +22,9 @@ namespace Inane\Event\Provider;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
- * Class ListenerProvider
+ * ListenerProvider
+ * The default listener provider: returns the listeners registered for an event
+ * in the order they were added.
  *
  * @version 1.0.0
  */

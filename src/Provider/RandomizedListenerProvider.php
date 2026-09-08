@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Inane\Event\Provider;
 
+use InvalidArgumentException;
+
 use function shuffle;
 
 /**
@@ -40,13 +42,17 @@ class RandomizedListenerProvider extends ListenerProvider {
      *
      * Returns listeners in a randomised order.
      *
-     * @param object $event
+     * @param string|object $event Event class name or instance.
      *
-     * @return iterable
+     * @return iterable Listeners for the event, in a randomised order.
+     *
+     * @throws InvalidArgumentException
      */
     public function getListenersForEvent(string|object $event): iterable {
+        // Unpacked into a list first as shuffle() needs an array by reference.
         $listeners = [...parent::getListenersForEvent($event)];
         shuffle($listeners);
+
         return $listeners;
     }
 }

@@ -33,20 +33,22 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 class AggregateProvider implements ListenerProviderInterface {
     /**
      * Providers
+     * Sub-providers, in the order they were added.
      *
-     * @var array
+     * @var ListenerProviderInterface[]
      */
     protected array $providers = [];
 
     /**
      * Get Listeners For Event
+     * Concatenates the listeners of every sub-provider, provider by provider.
      *
-     * @param object $event
+     * @param object $event The event to get listeners for.
      *
-     * @return iterable
+     * @return iterable Listeners of all sub-providers.
      */
     public function getListenersForEvent(object $event): iterable {
-        /** @var ListenerProviderInterface $provider */
+        // Sub-provider ordering is preserved; ordering within a provider is left to it.
         foreach($this->providers as $provider) yield from $provider->getListenersForEvent($event);
     }
 

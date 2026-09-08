@@ -44,9 +44,9 @@ class PrioritisedListenerProvider implements ListenerProviderInterface {
     /**
      * Get the event name from a string or object
      *
-     * @param string|object $event
+     * @param string|object $event Event class name or instance.
      *
-     * @return string
+     * @return string Event name.
      */
     protected static function getEventName(string|object $event): string {
         return is_object($event) ? $event::class : $event;
@@ -73,15 +73,16 @@ class PrioritisedListenerProvider implements ListenerProviderInterface {
      * Get Listeners For Event
      * Returns listeners ordered by priority (highest first).
      *
-     * @param object $event
+     * @param object $event The event to get listeners for.
      *
-     * @return iterable
+     * @return iterable Listeners for the event, highest priority first.
      */
     public function getListenersForEvent(object $event): iterable {
         $name = static::getEventName($event);
 
         if (!isset($this->listeners[$name])) return [];
 
+        // Sorted on a copy so the registration order of the groups is retained.
         $priorityGroups = $this->listeners[$name];
         krsort($priorityGroups, SORT_NUMERIC);
 
@@ -93,7 +94,7 @@ class PrioritisedListenerProvider implements ListenerProviderInterface {
     /**
      * Remove all listeners for an event.
      *
-     * @param string|object $event
+     * @param string|object $event Event class name or instance.
      *
      * @return void
      */
