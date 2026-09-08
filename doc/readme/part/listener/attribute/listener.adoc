@@ -4,8 +4,12 @@ Use `#[Listener]` on a public method to register it as a listener for an event
 class. The `event` argument must name an existing class; `priority` is optional
 and defaults to `0`.
 
+// tag::tagExample[]
 == Simple example
 
+.Simple Listener Attribute Example
+[%collapsible]
+====
 [source,php]
 ----
 <?php
@@ -35,7 +39,10 @@ $provider->addAttributedListener(new SendWelcomeEmail());
 $dispatcher = new EventDispatcher($provider);
 $dispatcher->dispatch(new UserRegisteredEvent('user@example.com'));
 ----
+====
+// end::tagExample[]
 
+// tag::tagExample[]
 == Comprehensive example
 
 `Listener` is repeatable, so one public method can listen for more than one
@@ -44,6 +51,9 @@ numeric priorities run first, while listeners with the same priority retain
 their registration order. `ListenerProvider` intentionally ignores declared
 attribute priorities and always retains registration order.
 
+.Comprehensive Listener Attribute Example
+[%collapsible]
+====
 [source,php]
 ----
 <?php
@@ -77,3 +87,5 @@ $provider->addAttributedListener(new AuditAndNotificationListener());
 $dispatcher = new EventDispatcher($provider);
 $dispatcher->dispatch(new InvoicePaidEvent());
 ----
+====
+// end::tagExample[]

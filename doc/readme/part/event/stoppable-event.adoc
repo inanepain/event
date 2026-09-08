@@ -21,6 +21,8 @@ Stops propagation of the event to further listeners.
 == Stoppable Event
 
 .Stoppable Event Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\StoppableEvent;
@@ -48,4 +50,5 @@ $provider->addListener(Odd::class, function (Odd $event) {
 $dispatcher->dispatch(new Odd('3')); // both listeners fire
 $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 ----
+====
 // end::tagExample[]

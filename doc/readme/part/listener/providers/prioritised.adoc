@@ -22,6 +22,8 @@ Removes all listeners registered for the given event.
 == Prioritised Provider
 
 .Prioritised Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -40,4 +42,5 @@ $dispatcher->dispatch(new Event());
 // Default
 // Low
 ----
+====
 // end::tagExample[]

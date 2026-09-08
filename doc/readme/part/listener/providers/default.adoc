@@ -19,6 +19,8 @@ Returns all listeners registered for the event's class, in insertion order.
 == Default Provider
 
 .Default Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -35,4 +37,5 @@ $dispatcher->dispatch(new Event());
 // First
 // Second
 ----
+====
 // end::tagExample[]

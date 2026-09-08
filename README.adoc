@@ -102,13 +102,23 @@ Stops propagation of the event to further listeners.
 
 `{ns-root}\LimitedEvent`
 
-Extends `StoppableEvent`
+Extends `StoppableEvent` to halt propagation after the event has been offered to
+a fixed number of listeners. The listener limit defaults to `1`; a limit of
+`0` prevents all listeners from being invoked. Calling the inherited
+`stopPropagation()` method stops propagation sooner.
 
 
 == Properties
 
+`limit` : `int`::
+The readonly maximum number of listeners that may handle the event.
 
 == Methods
+
+`isPropagationStopped()` : `bool`::
+Returns `true` once the listener limit is exhausted or propagation has been
+stopped manually. Each check increments the internal listener count, so let
+`EventDispatcher` perform the checks during dispatch.
 
 
 :leveloffset: 1
@@ -240,8 +250,21 @@ Yields listeners from each sub-provider in registration order.
 
 :leveloffset: 1
 
-:leveloffset!:
+<<<
 
+:leveloffset: +1
+
+= Listener Attribute
+
+Use `#[Listener]` on a public method to register it as a listener for an event
+class. The `event` argument must name an existing class; `priority` is optional
+and defaults to `0`.
+
+
+
+:leveloffset: 1
+
+:leveloffset!:
 
 <<<
 
@@ -254,8 +277,9 @@ Yields listeners from each sub-provider in registration order.
 = Event
 
 == Basic Event
-
 .Basic Event Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -275,12 +299,15 @@ $event = new UserRegistered('alice');
 echo $event->name;     // "UserRegistered"
 echo $event->username; // "alice"
 ----
+====
 
 <<<
 
 == Stoppable Event
 
 .Stoppable Event Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\StoppableEvent;
@@ -308,16 +335,47 @@ $provider->addListener(Odd::class, function (Odd $event) {
 $dispatcher->dispatch(new Odd('3')); // both listeners fire
 $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 ----
+====
 
 <<<
 
 == Limited Event
 
 .Limited Event Example
+[%collapsible]
+====
 [source,php]
 ----
+<?php
+
+declare(strict_types=1);
+
+use Inane\Event\EventDispatcher;
+use Inane\Event\LimitedEvent;
+use Inane\Event\Provider\ListenerProvider;
+
+$handledBy = [];
+$provider = new ListenerProvider();
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'first listener';
+});
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'second listener';
+});
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'third listener';
+});
+
+$dispatcher = new EventDispatcher($provider);
+$dispatcher->dispatch(new LimitedEvent(limit: 2));
+
+// $handledBy contains the first and second listeners only.
 
 ----
+====
 
 :leveloffset: 1
 
@@ -330,6 +388,8 @@ $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 == Event Dispatcher
 
 .Event Dispatcher Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -345,6 +405,7 @@ $provider->addListener(Event::class, function (Event $event) {
 
 $dispatcher->dispatch(new Event());
 ----
+====
 
 :leveloffset: 1
 
@@ -357,6 +418,8 @@ $dispatcher->dispatch(new Event());
 == Default Provider
 
 .Default Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -373,12 +436,15 @@ $dispatcher->dispatch(new Event());
 // First
 // Second
 ----
+====
 
 <<<
 
 == Prioritised Provider
 
 .Prioritised Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -397,12 +463,15 @@ $dispatcher->dispatch(new Event());
 // Default
 // Low
 ----
+====
 
 <<<
 
 == Randomised Provider
 
 .Randomised Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -419,12 +488,15 @@ $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
 // Order of A, B, C is random on each dispatch
 $dispatcher->dispatch(new Event());
 ----
+====
 
 <<<
 
 == Aggregate Provider
 
 .Aggregate Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -448,6 +520,90 @@ $dispatcher->dispatch(new Event());
 // Basic listener
 // Priority listener
 ----
+====
+
+<<<
+
+== Simple example
+
+.Simple Listener Attribute Example
+[%collapsible]
+====
+[source,php]
+----
+<?php
+
+declare(strict_types=1);
+
+use Inane\Event\Attribute\Listener;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\ListenerProvider;
+
+final readonly class UserRegisteredEvent {
+    public function __construct(
+        public string $email,
+    ) {}
+}
+
+final class SendWelcomeEmail {
+    #[Listener(UserRegisteredEvent::class)]
+    public function send(UserRegisteredEvent $event): void {
+        // Send a welcome email to $event->email.
+    }
+}
+
+$provider = new ListenerProvider();
+$provider->addAttributedListener(new SendWelcomeEmail());
+
+$dispatcher = new EventDispatcher($provider);
+$dispatcher->dispatch(new UserRegisteredEvent('user@example.com'));
+----
+====
+== Comprehensive example
+
+`Listener` is repeatable, so one public method can listen for more than one
+event class. Use `PrioritisedListenerProvider` when priority matters: higher
+numeric priorities run first, while listeners with the same priority retain
+their registration order. `ListenerProvider` intentionally ignores declared
+attribute priorities and always retains registration order.
+
+.Comprehensive Listener Attribute Example
+[%collapsible]
+====
+[source,php]
+----
+<?php
+
+declare(strict_types=1);
+
+use Inane\Event\Attribute\Listener;
+use Inane\Event\EventDispatcher;
+use Inane\Event\Provider\PrioritisedListenerProvider;
+
+final readonly class InvoicePaidEvent {}
+
+final readonly class AccountSuspendedEvent {}
+
+final class AuditAndNotificationListener {
+    #[Listener(event: InvoicePaidEvent::class, priority: 10)]
+    #[Listener(event: AccountSuspendedEvent::class, priority: 10)]
+    public function writeAuditLog(InvoicePaidEvent|AccountSuspendedEvent $event): void {
+        // Write the received event to the audit log.
+    }
+
+    #[Listener(event: InvoicePaidEvent::class, priority: 100)]
+    public function notifyFinance(InvoicePaidEvent $event): void {
+        // Notify finance before the audit log is written.
+    }
+}
+
+$provider = new PrioritisedListenerProvider();
+$provider->addAttributedListener(new AuditAndNotificationListener());
+
+$dispatcher = new EventDispatcher($provider);
+$dispatcher->dispatch(new InvoicePaidEvent());
+----
+====
 
 :leveloffset: 1
 

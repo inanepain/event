@@ -11,8 +11,9 @@ The event name. Defaults to the fully qualified class name of the event if not e
 
 // tag::tagExample[]
 == Basic Event
-
 .Basic Event Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -32,4 +33,5 @@ $event = new UserRegistered('alice');
 echo $event->name;     // "UserRegistered"
 echo $event->username; // "alice"
 ----
+====
 // end::tagExample[]

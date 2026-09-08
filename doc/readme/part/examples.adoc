@@ -8,4 +8,4 @@ include::dispatcher/example-dispatcher.adoc[leveloffset=+1]
 
 <<<
 
-include::listener/providers/example-listener-providers.adoc[leveloffset=+1]
+include::listener/example-listener.adoc[leveloffset=+1]

@@ -16,6 +16,8 @@ Yields listeners from each sub-provider in registration order.
 == Aggregate Provider
 
 .Aggregate Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -39,4 +41,5 @@ $dispatcher->dispatch(new Event());
 // Basic listener
 // Priority listener
 ----
+====
 // end::tagExample[]

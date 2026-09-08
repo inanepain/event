@@ -15,6 +15,8 @@ Returns all listeners for the event in a randomised order.
 == Randomised Provider
 
 .Randomised Provider Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -31,4 +33,5 @@ $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
 // Order of A, B, C is random on each dispatch
 $dispatcher->dispatch(new Event());
 ----
+====
 // end::tagExample[]

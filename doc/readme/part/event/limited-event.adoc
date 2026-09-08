@@ -2,20 +2,60 @@
 
 `{ns-root}\LimitedEvent`
 
-Extends `StoppableEvent`
+Extends `StoppableEvent` to halt propagation after the event has been offered to
+a fixed number of listeners. The listener limit defaults to `1`; a limit of
+`0` prevents all listeners from being invoked. Calling the inherited
+`stopPropagation()` method stops propagation sooner.
 
 
 == Properties
 
+`limit` : `int`::
+The readonly maximum number of listeners that may handle the event.
 
 == Methods
+
+`isPropagationStopped()` : `bool`::
+Returns `true` once the listener limit is exhausted or propagation has been
+stopped manually. Each check increments the internal listener count, so let
+`EventDispatcher` perform the checks during dispatch.
 
 // tag::tagExample[]
 == Limited Event
 
 .Limited Event Example
+[%collapsible]
+====
 [source,php]
 ----
+<?php
+
+declare(strict_types=1);
+
+use Inane\Event\EventDispatcher;
+use Inane\Event\LimitedEvent;
+use Inane\Event\Provider\ListenerProvider;
+
+$handledBy = [];
+$provider = new ListenerProvider();
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'first listener';
+});
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'second listener';
+});
+
+$provider->addListener(LimitedEvent::class, function (LimitedEvent $event) use (&$handledBy): void {
+    $handledBy[] = 'third listener';
+});
+
+$dispatcher = new EventDispatcher($provider);
+$dispatcher->dispatch(new LimitedEvent(limit: 2));
+
+// $handledBy contains the first and second listeners only.
 
 ----
+====
 // end::tagExample[]

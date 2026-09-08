@@ -18,6 +18,8 @@ Dispatches the event to all applicable listeners and returns the (possibly modif
 == Event Dispatcher
 
 .Event Dispatcher Example
+[%collapsible]
+====
 [source,php]
 ----
 use Inane\Event\Event;
@@ -33,4 +35,5 @@ $provider->addListener(Event::class, function (Event $event) {
 
 $dispatcher->dispatch(new Event());
 ----
+====
 // end::tagExample[]
