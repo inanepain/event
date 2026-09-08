@@ -24,7 +24,9 @@ declare(strict_types = 1);
 
 namespace Inane\Event\Tests\Provider;
 
+use Inane\Event\Attribute\Listener;
 use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
 use Inane\Event\Provider\PrioritisedListenerProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -79,6 +81,20 @@ final class PrioritisedListenerProviderTest extends TestCase {
         $result = $this->provider->addListener(Event::class, fn(object $event): null => null);
 
         $this->assertSame($this->provider, $result);
+    }
+
+    /**
+     * Attributed listeners are ordered by their declared priority.
+     *
+     * @return void
+     */
+    public function testAttributedListenersAreOrderedByPriority(): void {
+        $listener = new PrioritisedAttributedListenerStub();
+        $this->provider->addAttributedListener($listener);
+
+        (new EventDispatcher($this->provider))->dispatch(new Event());
+
+        $this->assertSame(['high', 'first', 'second', 'low'], $listener->calls);
     }
 
     /**
@@ -165,5 +181,30 @@ final class PrioritisedListenerProviderTest extends TestCase {
         $this->provider->clearListeners(Event::class);
 
         $this->assertSame([], [...$this->provider->getListenersForEvent(new Event())]);
+    }
+}
+
+final class PrioritisedAttributedListenerStub {
+    /** @var list<string> */
+    public array $calls = [];
+
+    #[Listener(Event::class, priority: 10)]
+    public function high(Event $event): void {
+        $this->calls[] = 'high';
+    }
+
+    #[Listener(Event::class)]
+    public function first(Event $event): void {
+        $this->calls[] = 'first';
+    }
+
+    #[Listener(Event::class)]
+    public function second(Event $event): void {
+        $this->calls[] = 'second';
+    }
+
+    #[Listener(Event::class, priority: -10)]
+    public function low(Event $event): void {
+        $this->calls[] = 'low';
     }
 }

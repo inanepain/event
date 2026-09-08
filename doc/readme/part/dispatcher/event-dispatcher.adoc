@@ -1,4 +1,4 @@
-= EventDispatcher
+= Event Dispatcher
 
 `{ns-root}\EventDispatcher`
 
@@ -14,8 +14,10 @@ Accepts any listener provider implementing `ListenerProviderInterface`.
 `dispatch(object $event)` : `object`::
 Dispatches the event to all applicable listeners and returns the (possibly modified) event.
 
-== Usage
+// tag::tagExample[]
+== Event Dispatcher
 
+.Event Dispatcher Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -31,3 +33,4 @@ $provider->addListener(Event::class, function (Event $event) {
 
 $dispatcher->dispatch(new Event());
 ----
+// end::tagExample[]

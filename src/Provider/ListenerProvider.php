@@ -29,5 +29,20 @@ use Psr\EventDispatcher\ListenerProviderInterface;
  * @version 1.0.0
  */
 class ListenerProvider implements ListenerProviderInterface {
+    use AttributedListenerProviderTrait;
     use ListenerProviderTrait;
+
+    /**
+     * Add Attributed Listener Binding
+     * Registers a binding without changing insertion order.
+     *
+     * @param class-string<object> $event    Event class handled by the method.
+     * @param callable             $listener Listener callable.
+     * @param int                  $priority Listener priority.
+     *
+     * @return void
+     */
+    protected function addAttributedListenerBinding(string $event, callable $listener, int $priority): void {
+        $this->addListener($event, $listener);
+    }
 }

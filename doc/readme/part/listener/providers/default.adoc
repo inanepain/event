@@ -9,11 +9,16 @@ Basic listener provider. Listeners are registered per event class name and retur
 `addListener(string|object $event, callable $listener)` : `static`::
 Registers a listener for the given event class name or instance. Returns the provider for chaining.
 
+`addAttributedListener(object $listener)` : `static`::
+Registers every public method annotated with `Inane\Event\Attribute\Listener` on the supplied listener object. Repeated attributes register a method for each declared event; priority metadata does not affect insertion order.
+
 `getListenersForEvent(object $event)` : `iterable`::
 Returns all listeners registered for the event's class, in insertion order.
 
-== Usage
+// tag::tagExample[]
+== Default Provider
 
+.Default Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -30,3 +35,4 @@ $dispatcher->dispatch(new Event());
 // First
 // Second
 ----
+// end::tagExample[]

@@ -3,10 +3,10 @@
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: PSR-14 implementation: event dispatcher.
-:keywords: inanepain, library, event, dispatcher, listener
+:keywords: inanepain, inane, library, psr-14, event, listener, provider, dispatcher
 :homepage: https://github.com/inanepain/event
 :revnumber: 0.1.0
-:revdate: 2022-03-14
+:revdate: 2022-07-26
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -28,7 +28,7 @@
 
 {description}
 
-:sectnums:
+:sectnums!:
 
 <<<
 
@@ -46,9 +46,7 @@ composer require {pkg-id}
 
 <<<
 
-:leveloffset: +1
-
-= Usage
+:sectnums:
 
 :leveloffset: +1
 
@@ -65,10 +63,199 @@ Base event class. Extend this to create custom events.
 == Properties
 
 `name` : `string`::
-The event name. Defaults to the fully-qualified class name of the event if not explicitly set.
+The event name. Defaults to the fully qualified class name of the event if not explicitly set.
 
-== Usage
 
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Stoppable Event
+
+`{ns-root}\StoppableEvent`
+
+Extends `Event` and implements `StoppableEventInterface`. Allows event propagation to be halted mid-dispatch; once stopped, propagation cannot be resumed.
+
+== Properties
+
+`propagationStopped` : `bool`::
+Whether propagation has been stopped. Once set to `true` it cannot be reset to `false`.
+
+== Methods
+
+`isPropagationStopped()` : `bool`::
+Returns `true` if propagation has been stopped.
+
+`stopPropagation()` : `void`::
+Stops propagation of the event to further listeners.
+
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Limited Event
+
+`{ns-root}\LimitedEvent`
+
+Extends `StoppableEvent`
+
+
+== Properties
+
+
+== Methods
+
+
+:leveloffset: 1
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Dispatcher
+
+:leveloffset: +1
+
+= Event Dispatcher
+
+`{ns-root}\EventDispatcher`
+
+Implements `EventDispatcherInterface`. Dispatches events to all registered listeners via a `ListenerProviderInterface`. Respects `StoppableEventInterface` — propagation halts as soon as `isPropagationStopped()` returns `true`.
+
+== Constructor
+
+`__construct(ListenerProviderInterface $provider)`::
+Accepts any listener provider implementing `ListenerProviderInterface`.
+
+== Methods
+
+`dispatch(object $event)` : `object`::
+Dispatches the event to all applicable listeners and returns the (possibly modified) event.
+
+
+:leveloffset: 1
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Listener Providers
+
+:leveloffset: +1
+
+= Default Provider
+
+`{ns-provider}\ListenerProvider`
+
+Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
+
+== Methods
+
+`addListener(string|object $event, callable $listener)` : `static`::
+Registers a listener for the given event class name or instance. Returns the provider for chaining.
+
+`addAttributedListener(object $listener)` : `static`::
+Registers every public method annotated with `Inane\Event\Attribute\Listener` on the supplied listener object. Repeated attributes register a method for each declared event; priority metadata does not affect insertion order.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners registered for the event's class, in insertion order.
+
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Prioritised Provider
+
+`{ns-provider}\PrioritisedListenerProvider`
+
+Listener provider that dispatches listeners in priority order. Higher priority values are called first; listeners with equal priority are called in insertion order.
+
+== Methods
+
+`addListener(string|object $event, callable $listener, int $priority = 0)` : `static`::
+Registers a listener with an optional priority (default `0`). Returns the provider for chaining.
+
+`addAttributedListener(object $listener)` : `static`::
+Registers every public method annotated with `Inane\Event\Attribute\Listener` on the supplied listener object, using each attribute's priority.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns listeners ordered by descending priority.
+
+`clearListeners(string|object $event)` : `void`::
+Removes all listeners registered for the given event.
+
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Randomised Provider
+
+`{ns-provider}\RandomisedListenerProvider`
+
+Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
+
+== Methods
+
+Inherits `addListener()` from `ListenerProvider`.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Returns all listeners for the event in a randomised order.
+
+
+:leveloffset: 1
+
+<<<
+
+:leveloffset: +1
+
+= Aggregate Provider
+
+`{ns-provider}\AggregateProvider`
+
+Combines multiple listener providers into one. Each sub-provider is queried in the order it was added; all listeners from the first provider are returned before any from the second, and so on. Per-provider internal ordering is preserved, but cross-provider ordering is not guaranteed.
+
+== Methods
+
+`addProvider(ListenerProviderInterface $provider)` : `static`::
+Appends a provider to the aggregate. Returns the aggregate for chaining.
+
+`getListenersForEvent(object $event)` : `iterable`::
+Yields listeners from each sub-provider in registration order.
+
+
+:leveloffset: 1
+
+:leveloffset!:
+
+
+<<<
+
+:leveloffset: +1
+
+= Examples
+
+:leveloffset: +1
+
+= Event
+
+== Basic Event
+
+.Basic Event Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -89,33 +276,11 @@ echo $event->name;     // "UserRegistered"
 echo $event->username; // "alice"
 ----
 
-:leveloffset: 2
-
 <<<
 
-:leveloffset: +1
+== Stoppable Event
 
-= StoppableEvent
-
-`{ns-root}\StoppableEvent`
-
-Extends `Event` and implements `StoppableEventInterface`. Allows event propagation to be halted mid-dispatch; once stopped, propagation cannot be resumed.
-
-== Properties
-
-`propagationStopped` : `bool`::
-Whether propagation has been stopped. Once set to `true` it cannot be reset to `false`.
-
-== Methods
-
-`isPropagationStopped()` : `bool`::
-Returns `true` if propagation has been stopped.
-
-`stopPropagation()` : `void`::
-Stops propagation of the event to further listeners.
-
-== Usage
-
+.Stoppable Event Example
 [source,php]
 ----
 use Inane\Event\StoppableEvent;
@@ -144,7 +309,15 @@ $dispatcher->dispatch(new Odd('3')); // both listeners fire
 $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 ----
 
-:leveloffset: 2
+<<<
+
+== Limited Event
+
+.Limited Event Example
+[source,php]
+----
+
+----
 
 :leveloffset: 1
 
@@ -154,26 +327,9 @@ $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 
 = Dispatcher
 
-:leveloffset: +1
+== Event Dispatcher
 
-= EventDispatcher
-
-`{ns-root}\EventDispatcher`
-
-Implements `EventDispatcherInterface`. Dispatches events to all registered listeners via a `ListenerProviderInterface`. Respects `StoppableEventInterface` — propagation halts as soon as `isPropagationStopped()` returns `true`.
-
-== Constructor
-
-`__construct(ListenerProviderInterface $provider)`::
-Accepts any listener provider implementing `ListenerProviderInterface`.
-
-== Methods
-
-`dispatch(object $event)` : `object`::
-Dispatches the event to all applicable listeners and returns the (possibly modified) event.
-
-== Usage
-
+.Event Dispatcher Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -190,8 +346,6 @@ $provider->addListener(Event::class, function (Event $event) {
 $dispatcher->dispatch(new Event());
 ----
 
-:leveloffset: 2
-
 :leveloffset: 1
 
 <<<
@@ -200,24 +354,9 @@ $dispatcher->dispatch(new Event());
 
 = Listener Providers
 
-:leveloffset: +1
+== Default Provider
 
-= Default Provider
-
-`{ns-provider}\ListenerProvider`
-
-Basic listener provider. Listeners are registered per event class name and returned in the order they were added.
-
-== Methods
-
-`addListener(string|object $event, callable $listener)` : `static`::
-Registers a listener for the given event class name or instance. Returns the provider for chaining.
-
-`getListenersForEvent(object $event)` : `iterable`::
-Returns all listeners registered for the event's class, in insertion order.
-
-== Usage
-
+.Default Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -235,31 +374,11 @@ $dispatcher->dispatch(new Event());
 // Second
 ----
 
-:leveloffset: 2
-
 <<<
 
-:leveloffset: +1
+== Prioritised Provider
 
-= Prioritised Provider
-
-`{ns-provider}\PrioritisedListenerProvider`
-
-Listener provider that dispatches listeners in priority order. Higher priority values are called first; listeners with equal priority are called in insertion order.
-
-== Methods
-
-`addListener(string|object $event, callable $listener, int $priority = 0)` : `static`::
-Registers a listener with an optional priority (default `0`). Returns the provider for chaining.
-
-`getListenersForEvent(object $event)` : `iterable`::
-Returns listeners ordered by descending priority.
-
-`clearListeners(string|object $event)` : `void`::
-Removes all listeners registered for the given event.
-
-== Usage
-
+.Prioritised Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -279,34 +398,18 @@ $dispatcher->dispatch(new Event());
 // Low
 ----
 
-:leveloffset: 2
-
 <<<
 
-:leveloffset: +1
+== Randomised Provider
 
-= Randomized Provider
-
-`{ns-provider}\RandomizedListenerProvider`
-
-Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
-
-== Methods
-
-Inherits `addListener()` from `ListenerProvider`.
-
-`getListenersForEvent(object $event)` : `iterable`::
-Returns all listeners for the event in a randomised order.
-
-== Usage
-
+.Randomised Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
 use Inane\Event\EventDispatcher;
-use Inane\Event\Provider\RandomizedListenerProvider;
+use Inane\Event\Provider\RandomisedListenerProvider;
 
-$provider = new RandomizedListenerProvider();
+$provider = new RandomisedListenerProvider();
 $dispatcher = new EventDispatcher($provider);
 
 $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
@@ -317,28 +420,11 @@ $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
 $dispatcher->dispatch(new Event());
 ----
 
-:leveloffset: 2
-
 <<<
 
-:leveloffset: +1
+== Aggregate Provider
 
-= Aggregate Provider
-
-`{ns-provider}\AggregateProvider`
-
-Combines multiple listener providers into one. Each sub-provider is queried in the order it was added; all listeners from the first provider are returned before any from the second, and so on. Per-provider internal ordering is preserved, but cross-provider ordering is not guaranteed.
-
-== Methods
-
-`addProvider(ListenerProviderInterface $provider)` : `static`::
-Appends a provider to the aggregate. Returns the aggregate for chaining.
-
-`getListenersForEvent(object $event)` : `iterable`::
-Yields listeners from each sub-provider in registration order.
-
-== Usage
-
+.Aggregate Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -362,8 +448,6 @@ $dispatcher->dispatch(new Event());
 // Basic listener
 // Priority listener
 ----
-
-:leveloffset: 2
 
 :leveloffset: 1
 

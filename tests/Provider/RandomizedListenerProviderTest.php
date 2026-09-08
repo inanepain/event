@@ -24,10 +24,12 @@ declare(strict_types = 1);
 
 namespace Inane\Event\Tests\Provider;
 
+use Inane\Event\Attribute\Listener;
 use Inane\Event\Event;
+use Inane\Event\EventDispatcher;
 use Inane\Event\Provider\{
     ListenerProvider,
-    RandomizedListenerProvider};
+    RandomisedListenerProvider};
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
@@ -41,9 +43,9 @@ final class RandomizedListenerProviderTest extends TestCase {
     /**
      * Randomized Listener Provider
      *
-     * @var RandomizedListenerProvider
+     * @var RandomisedListenerProvider
      */
-    private RandomizedListenerProvider $provider;
+    private RandomisedListenerProvider $provider;
 
     /**
      * Creates a fresh provider for each test.
@@ -51,7 +53,7 @@ final class RandomizedListenerProviderTest extends TestCase {
      * @return void
      */
     protected function setUp(): void {
-        $this->provider = new RandomizedListenerProvider();
+        $this->provider = new RandomisedListenerProvider();
     }
 
     /**
@@ -71,6 +73,20 @@ final class RandomizedListenerProviderTest extends TestCase {
      */
     public function testUnknownEventReturnsEmptyList(): void {
         $this->assertSame([], [...$this->provider->getListenersForEvent(new Event())]);
+    }
+
+    /**
+     * Attributed listeners are available through inherited registration.
+     *
+     * @return void
+     */
+    public function testAttributedListenerIsRegistered(): void {
+        $listener = new RandomizedAttributedListenerStub();
+        $this->provider->addAttributedListener($listener);
+
+        (new EventDispatcher($this->provider))->dispatch(new Event());
+
+        $this->assertSame(1, $listener->calls);
     }
 
     /**
@@ -116,5 +132,14 @@ final class RandomizedListenerProviderTest extends TestCase {
         $this->provider->clearListeners(Event::class);
 
         $this->assertSame([], [...$this->provider->getListenersForEvent(new Event())]);
+    }
+}
+
+final class RandomizedAttributedListenerStub {
+    public int $calls = 0;
+
+    #[Listener(Event::class)]
+    public function handle(Event $event): void {
+        ++$this->calls;
     }
 }

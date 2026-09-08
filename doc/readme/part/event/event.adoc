@@ -7,10 +7,12 @@ Base event class. Extend this to create custom events.
 == Properties
 
 `name` : `string`::
-The event name. Defaults to the fully-qualified class name of the event if not explicitly set.
+The event name. Defaults to the fully qualified class name of the event if not explicitly set.
 
-== Usage
+// tag::tagExample[]
+== Basic Event
 
+.Basic Event Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -30,3 +32,4 @@ $event = new UserRegistered('alice');
 echo $event->name;     // "UserRegistered"
 echo $event->username; // "alice"
 ----
+// end::tagExample[]

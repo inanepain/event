@@ -1,13 +1,45 @@
-= Inane Event: Changelog
+= Changelog: inanepain/event
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: PSR-14 implementation: event dispatcher.
+:keywords: inanepain, inane, library, psr-14, event, listener, provider, dispatcher
+:revnumber: 0.1.0
+:revdate: 2022-07-26
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
 
-____
+== History
 
-$Id$ ($Date$)
+:leveloffset: +2
 
-____
+= 0.2.0-dev (2026 Xxx xx)
+:revnumber: 0.2.0-dev
+:revdate: 2026-xx-xx
+:revremark: -dev
+:version-label: Unconfirmed
 
-Also have a look at the link:README.md[README] for more information.
+* refactor: moved `ListenerProvider`, `AggregateProvider`, `PrioritizedListenerProvider`, `RandomizedListenerProvider` and `ListenerProviderTrait` into `Provider` namespace.
+* new: `PrioritizedListenerProvider` - listener provider with priority ordering.
+* new: `RandomizedListenerProvider` - listener provider with randomized listener order.
+* new: `ListenerProviderTrait` - shared trait for listener provider implementations.
+* update: `Event` - added name property.
+* fix: `StoppableEvent` - corrected propagation stopping behaviour.
+* new: `Attribute\Listener` - declarative public listener-method registration, including repeatable event bindings and priority metadata.
+* docs: restructured readme includes; events, dispatcher and providers each in their own titled section.
 
-== current @2022-03-14
+:leveloffset!:
+:leveloffset: +2
 
-* initial
+= 0.1.0 (2022 Jul 26)
+:revnumber: 0.1.0
+:revdate: 2022-07-26
+
+* initial release
+
+:leveloffset!:

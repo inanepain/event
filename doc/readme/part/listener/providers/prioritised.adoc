@@ -9,14 +9,19 @@ Listener provider that dispatches listeners in priority order. Higher priority v
 `addListener(string|object $event, callable $listener, int $priority = 0)` : `static`::
 Registers a listener with an optional priority (default `0`). Returns the provider for chaining.
 
+`addAttributedListener(object $listener)` : `static`::
+Registers every public method annotated with `Inane\Event\Attribute\Listener` on the supplied listener object, using each attribute's priority.
+
 `getListenersForEvent(object $event)` : `iterable`::
 Returns listeners ordered by descending priority.
 
 `clearListeners(string|object $event)` : `void`::
 Removes all listeners registered for the given event.
 
-== Usage
+// tag::tagExample[]
+== Prioritised Provider
 
+.Prioritised Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -35,3 +40,4 @@ $dispatcher->dispatch(new Event());
 // Default
 // Low
 ----
+// end::tagExample[]

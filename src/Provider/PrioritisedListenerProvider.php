@@ -34,6 +34,7 @@ use const SORT_NUMERIC;
  * @version 1.0.0
  */
 class PrioritisedListenerProvider implements ListenerProviderInterface {
+    use AttributedListenerProviderTrait;
     /**
      * Listeners indexed by event name and priority
      *
@@ -67,6 +68,20 @@ class PrioritisedListenerProvider implements ListenerProviderInterface {
         $this->listeners[$name][$priority][] = $listener;
 
         return $this;
+    }
+
+    /**
+     * Add Attributed Listener Binding
+     * Registers a binding using its declared priority.
+     *
+     * @param class-string<object> $event    Event class handled by the method.
+     * @param callable             $listener Listener callable.
+     * @param int                  $priority Listener priority.
+     *
+     * @return void
+     */
+    protected function addAttributedListenerBinding(string $event, callable $listener, int $priority): void {
+        $this->addListener($event, $listener, $priority);
     }
 
     /**

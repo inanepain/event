@@ -19,12 +19,9 @@ declare(strict_types = 1);
 
 namespace Inane\Event\Provider;
 
-use Inane\Stdlib\Exception\{
-    JsonException,
-    RuntimeException};
-use Inane\Stdlib\Options;
 use InvalidArgumentException;
 
+use function in_array;
 use function is_object;
 
 /**
@@ -40,12 +37,9 @@ trait ListenerProviderTrait {
      * Event Listeners
      * Lazily initialised store of listeners, keyed on event name.
      *
-     * @var Options
+     * @var array<string, list<callable>>
      */
-    protected Options $eventListeners {
-        get => $this->eventListeners ??= new Options();
-        set => $this->eventListeners = $value;
-    }
+    protected array $eventListeners = [];
 
     /**
      * Get Event Name
@@ -68,18 +62,15 @@ trait ListenerProviderTrait {
      *
      * @return static The called object.
      *
-     * @throws JsonException
-     * @throws RuntimeException
      * @throws InvalidArgumentException
      */
     public function addListener(string|object $event, callable $listener): static {
         $event = static::getEventName($event);
         // Seed an empty listener list the first time the event is seen.
-        if (!$this->eventListeners->has($event)) $this->eventListeners->set($event, []);
+        if (!isset($this->eventListeners[$event])) $this->eventListeners[$event] = [];
 
         // Strict comparison so the same callable is not registered twice.
-        if (!$this->eventListeners->get($event)
-            ->contains($listener, true)) $this->eventListeners->get($event)[] = $listener;
+        if (!in_array($listener, $this->eventListeners[$event], true)) $this->eventListeners[$event][] = $listener;
 
         return $this;
     }
@@ -96,7 +87,7 @@ trait ListenerProviderTrait {
      */
     public function getListenersForEvent(string|object $event): iterable {
         $event = static::getEventName($event);
-        if ($this->eventListeners->has($event)) return $this->eventListeners->get($event);
+        if (isset($this->eventListeners[$event])) return $this->eventListeners[$event];
 
         return [];
     }
@@ -109,11 +100,10 @@ trait ListenerProviderTrait {
      *
      * @return void
      *
-     * @throws RuntimeException
      */
     public function clearListeners(string|object $event): void {
         $event = static::getEventName($event);
-        if ($this->eventListeners->has($event)) $this->eventListeners->unset($event);
+        unset($this->eventListeners[$event]);
     }
     #endregion Provider
 }

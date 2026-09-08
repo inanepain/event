@@ -1,6 +1,6 @@
-= Randomized Provider
+= Randomised Provider
 
-`{ns-provider}\RandomizedListenerProvider`
+`{ns-provider}\RandomisedListenerProvider`
 
 Extends `ListenerProvider`. Returns listeners in a randomised order on each dispatch. Useful for testing that application behaviour does not depend on listener execution order.
 
@@ -11,15 +11,17 @@ Inherits `addListener()` from `ListenerProvider`.
 `getListenersForEvent(object $event)` : `iterable`::
 Returns all listeners for the event in a randomised order.
 
-== Usage
+// tag::tagExample[]
+== Randomised Provider
 
+.Randomised Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
 use Inane\Event\EventDispatcher;
-use Inane\Event\Provider\RandomizedListenerProvider;
+use Inane\Event\Provider\RandomisedListenerProvider;
 
-$provider = new RandomizedListenerProvider();
+$provider = new RandomisedListenerProvider();
 $dispatcher = new EventDispatcher($provider);
 
 $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
@@ -29,3 +31,4 @@ $provider->addListener(Event::class, fn (Event $e) => print("A\n"))
 // Order of A, B, C is random on each dispatch
 $dispatcher->dispatch(new Event());
 ----
+// end::tagExample[]

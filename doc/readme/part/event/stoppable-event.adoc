@@ -1,4 +1,4 @@
-= StoppableEvent
+= Stoppable Event
 
 `{ns-root}\StoppableEvent`
 
@@ -17,8 +17,10 @@ Returns `true` if propagation has been stopped.
 `stopPropagation()` : `void`::
 Stops propagation of the event to further listeners.
 
-== Usage
+// tag::tagExample[]
+== Stoppable Event
 
+.Stoppable Event Example
 [source,php]
 ----
 use Inane\Event\StoppableEvent;
@@ -46,3 +48,4 @@ $provider->addListener(Odd::class, function (Odd $event) {
 $dispatcher->dispatch(new Odd('3')); // both listeners fire
 $dispatcher->dispatch(new Odd('7')); // only listener 1 fires
 ----
+// end::tagExample[]

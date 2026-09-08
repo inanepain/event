@@ -1,7 +1,11 @@
 = Events
 
-include::class/event.adoc[leveloffset=+1]
+include::event/event.adoc[leveloffset=+1,tag=!tagExample]
 
 <<<
 
-include::class/stoppable-event.adoc[leveloffset=+1]
+include::event/stoppable-event.adoc[leveloffset=+1,tag=!tagExample]
+
+<<<
+
+include::event/limited-event.adoc[leveloffset=+1,tag=!tagExample]

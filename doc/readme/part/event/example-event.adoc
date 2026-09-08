@@ -1,0 +1,11 @@
+= Event
+
+include::event.adoc[tag=tagExample]
+
+<<<
+
+include::stoppable-event.adoc[tag=tagExample]
+
+<<<
+
+include::limited-event.adoc[tag=tagExample]

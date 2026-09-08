@@ -29,14 +29,14 @@ use InvalidArgumentException;
 use function shuffle;
 
 /**
- * RandomizedListenerProvider
+ * RandomisedListenerProvider
  *
  * A listener provider that returns listeners in a randomised order.
- * Useful for testing or when listener execution order should not be relied upon.
+ * Useful for testing or when the listener execution order should not be relied upon.
  *
  * @version 1.0.0
  */
-class RandomizedListenerProvider extends ListenerProvider {
+class RandomisedListenerProvider extends ListenerProvider {
     /**
      * Get Listeners For Event
      *

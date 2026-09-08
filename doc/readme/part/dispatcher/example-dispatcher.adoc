@@ -1,0 +1,3 @@
+= Dispatcher
+
+include::event-dispatcher.adoc[tag=tagExample]

@@ -1,0 +1,21 @@
+= Limited Event
+
+`{ns-root}\LimitedEvent`
+
+Extends `StoppableEvent`
+
+
+== Properties
+
+
+== Methods
+
+// tag::tagExample[]
+== Limited Event
+
+.Limited Event Example
+[source,php]
+----
+
+----
+// end::tagExample[]

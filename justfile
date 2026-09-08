@@ -5,7 +5,7 @@
 set shell := ["zsh", "-cu"]
 set positional-arguments
 
-project := "inane\\event"
+project := 'inane\\event'
 
 # list recipes
 _default:
@@ -26,17 +26,33 @@ git-push-all: (_start "Push All") && (_done "Push All")
     #!/usr/bin/env zsh
     git pushall
 
-# generate php part (v2) (all, cache, html)
-php-doc clear="all":
+#region DOC
+# compile asciidoc files
+[group: 'doc']
+build:
 	#!/usr/bin/env zsh
-	if [ -d .phpdoc ] && [[ "{{clear}}" = "all" || "{{clear}}" = "cache" ]]; then
-		echo "\tCleaning: cache..."
-		rm -fr .phpdoc
-	fi
-	if [ -d documentation/code ] && [[ "{{clear}}" = "all" || "{{clear}}" = "html" ]]; then
-		echo "\tCleaning: html..."
-		rm -fr documentation/code
-	fi
+	echo "project: {{MAGENTA}}{{project}}{{NORMAL}} => Building documentation..."
+	just build-changelog
+	just build-readme
+	echo "{{MAGENTA}}{{project}}{{NORMAL}}: documentation {{BOLD + RED + UNDERLINE}}built{{NORMAL}}"
 
-	mkdir -p documentation/code
-	phpdoc -d src -t documentation/code --title="{{project}}" --defaultpackagename="Inane"
+# Build changelog
+[group: 'doc']
+build-changelog: && (compile "changelog")
+
+# Build readme
+[group: 'doc']
+build-readme: && (compile "readme")
+
+# compile final asciidoc file: changelog, readme
+[group: 'doc']
+[arg('target', pattern='changelog|readme', help="Build final document from source docs.")]
+compile target="changelog": (_start target) && (_done target)
+	#!/usr/bin/env zsh
+	echo "\tBuilding {{CYAN}}{{uppercase(target)}}{{NORMAL}}.adoc..."
+	rm -f {{uppercase(target)}}.adoc
+	asciidoctor-reducer.bat -o {{uppercase(target)}}.adoc doc/{{target}}/index.adoc
+	asciidoctor.bat -b docbook {{uppercase(target)}}.adoc
+	rm -f {{uppercase(target)}}.xml
+	echo "\t{{uppercase(target)}}.adoc {{RED}}done.{{NORMAL}}"
+#endregion DOC

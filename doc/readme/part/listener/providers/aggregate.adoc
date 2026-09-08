@@ -12,8 +12,10 @@ Appends a provider to the aggregate. Returns the aggregate for chaining.
 `getListenersForEvent(object $event)` : `iterable`::
 Yields listeners from each sub-provider in registration order.
 
-== Usage
+// tag::tagExample[]
+== Aggregate Provider
 
+.Aggregate Provider Example
 [source,php]
 ----
 use Inane\Event\Event;
@@ -37,3 +39,4 @@ $dispatcher->dispatch(new Event());
 // Basic listener
 // Priority listener
 ----
+// end::tagExample[]
