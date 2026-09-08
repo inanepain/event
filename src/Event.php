@@ -40,6 +40,6 @@ class Event {
      * @var string
      */
     public string $name {
-        get => $this->name ?? $this->name = static::class;
+        get => $this->name ??= static::class;
     }
 }

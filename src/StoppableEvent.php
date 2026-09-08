@@ -10,17 +10,17 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\event
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\event
  * @category event
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Event;
 
@@ -32,19 +32,18 @@ use Psr\EventDispatcher\StoppableEventInterface;
  * @version 1.0.0
  */
 class StoppableEvent extends Event implements StoppableEventInterface {
-
     /**
      * Propagation Stopped
      *
      * @var bool Whether no further event listeners should be triggered
      */
-    public bool $propagationStopped = false {
+    protected bool $propagationStopped = false {
         get => $this->propagationStopped;
-        set => $this->propagationStopped = $this->propagationStopped ? true : $value;
+        set => $this->propagationStopped = $value;
     }
 
     /**
-     * Is Propagation Stopped
+     * Is Propagation Stopped?
      *
      * @return bool Whether no further event listeners should be triggered
      */

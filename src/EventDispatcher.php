@@ -59,7 +59,7 @@ class EventDispatcher implements EventDispatcherInterface {
      */
     public function dispatch(object $event): object {
         foreach ($this->provider->getListenersForEvent($event) as $listener) {
-            if ($event instanceof StoppableEventInterface && $event->propagationStopped) return $event;
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) return $event;
             $listener($event);
         }
 

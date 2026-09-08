@@ -31,7 +31,7 @@ use function is_object;
 trait ListenerProviderTrait {
     #region Provider
     protected Options $eventListeners {
-        get => $this->eventListeners ?? $this->eventListeners = new Options();
+        get => $this->eventListeners ??= new Options();
         set => $this->eventListeners = $value;
     }
 
