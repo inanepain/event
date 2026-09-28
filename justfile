@@ -56,3 +56,18 @@ compile target="changelog": (_start target) && (_done target)
 	rm -f {{uppercase(target)}}.xml
 	echo "\t{{uppercase(target)}}.adoc {{RED}}done.{{NORMAL}}"
 #endregion DOC
+
+# generate php part (v2) (all, cache, html)
+php-doc clear="all":
+	#!/usr/bin/env zsh
+	if [ -d .phpdoc ] && [[ "{{clear}}" = "all" || "{{clear}}" = "cache" ]]; then
+		echo "\tCleaning: cache..."
+		rm -fr .phpdoc
+	fi
+	if [ -d phpdoc ] && [[ "{{clear}}" = "all" || "{{clear}}" = "html" ]]; then
+		echo "\tCleaning: html..."
+		rm -fr phpdoc
+	fi
+
+	mkdir -p phpdoc
+	phpdoc -d src -t phpdoc --title="{{project}}" --defaultpackagename="Inane"
