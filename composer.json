@@ -44,7 +44,9 @@
         "psr/event-dispatcher": ">=1.0",
         "fig/event-dispatcher-util": ">=1.0"
     },
-    "require-dev": {},
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
     "scripts": {
         "mk-doc-dir": [
             "mkdir -p doc/{changelog,readme}",
@@ -55,32 +57,17 @@
             "touch doc/readme/part/install.adoc"
         ],
         "build": [
-            "echo \"Library: inanepain/$(basename $(pwd))\"",
-            "echo build: all...",
+            "echo build: doc: db",
             "@build-changelog",
             "@build-readme",
-            "echo build: done!"
-        ],
-        "build-win": [
-            "@build-changelog-win",
-            "@build-readme-win"
+            "echo doc: db: built"
         ],
         "build-changelog": [
             "echo building: changelog...",
-            "rm -f CHANGELOG.adoc",
-            "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
-        ],
-        "build-changelog-win": [
-            "del CHANGELOG.adoc",
             "asciidoctor-reducer -o CHANGELOG.adoc doc/changelog/index.adoc"
         ],
         "build-readme": [
             "echo building: readme...",
-            "rm -f README.adoc",
-            "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
-        ],
-        "build-readme-win": [
-            "del README.adoc",
             "asciidoctor-reducer -o README.adoc doc/readme/index.adoc"
         ]
     }
